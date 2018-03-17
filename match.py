@@ -2,6 +2,7 @@
 # Record = dict
 # tuple  = all key is inc Seq <Num>
 # tuple as arguments 
+"""
 record1 = {
     1:"abc",
     2:"cba"
@@ -17,7 +18,7 @@ def tuple2record(tupl):
     keys = range(len(tupl))
     return dict(zip(keys,tupl))
 print( record2tuple( tuple2record ( record2tuple(record1) ) ) )
-n
+"""
 class MatchError(Exception): pass
 
 class Switch(object):
@@ -43,11 +44,14 @@ def Match():
             print( env )
         temp = Switch(env[func.__name__])
         def helper(argv):
+            print "argv:",argv
             return temp(argv)
         return helper
     return match
 
 match = Match()
+"""
+# test
 @match
 def mSum(x,*xs):
     #print x,xs
@@ -96,3 +100,4 @@ def elem(a):
         return False
     return elemc
 print elem(1)([0,2,3,4,5])
+"""
