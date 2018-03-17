@@ -27,7 +27,8 @@ class Switch(object):
     def __call__(self,argv):
         for func in self.funcList:
             try:
-                result = apply(func,argv)
+                #result = apply(func,argv)
+                result = func(*argv)
                 return result
             except TypeError,e:
                 continue
