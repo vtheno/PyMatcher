@@ -35,7 +35,7 @@ def fact1(n):
     else:
         return n  *  next ( fact1(n-1) )
 
-nj = fact1(500)
+nj = fact1(5000)
 print ( nj )
 while 1 :
     try:
@@ -53,7 +53,7 @@ def fact3(n):
     return result
 
 print( fact2 )
-info = fact2(500,1)
+info = fact2(50000,1)
 while 1:
     try:
         info = next(info)
@@ -61,7 +61,7 @@ while 1:
         #print( info )
         break
 #print( "info:",info )
-factz = fact3(500)
+factz = fact3(50000)
 #print( "factz:",factz )
 print( factz == info )
 

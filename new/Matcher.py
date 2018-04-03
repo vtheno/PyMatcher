@@ -1,24 +1,17 @@
 #coding=utf-8
 def Tail(func):
-    def init(self,v):
-        self.v = v
-    def toString(self):
-        return "(Ref {})".format(self.v)
-    Ref = type("Ref",(),{"__init__":init,"__repr__":toString})
-    info = Ref( (None,None) )
-    def call(*args,**kw): # 此处应该交叉引用
-        info.v = (args,kw)
-        argv,kwd = info.v
-        yield func (*argv,**kwd)
+    def call(*args,**kw): # x
+        yield func (*args,**kw)
     return call
+
 def force(g):
     while 1:
         try:
             g = next(g)
-            #print (g)
         except Exception as e:
-            #print (g,e)
+            print (e,g)
             return g
+
 List = type("List",(),{})
 ListValue = type("ListValue",(List,),{})
 def init(self,hd,tl): 
@@ -74,7 +67,16 @@ def sum(self,acc):
 def sum(self,acc):
     return acc
 print( force( sum(tempList,0) ) )
-
+@matcher(Cons)
+def elem(self,element,acc):
+    if element == self.hd:
+        return True
+    else:
+        return self.tl.elem(element,acc)
+@matcher(Empty)
+def elem(self,element,acc):
+    return acc
+print( force( elem(tempList,2,False) ) )
 def list2List(lst):
     def init(self,v):
         self.v = v
@@ -88,14 +90,21 @@ def list2List(lst):
         tmp.tl = rest
         tmp = tmp.tl
     return temp.v
-
-tmp = list(range(1000))
+def list2List1(lst,acc):
+    if lst == []:
+        return acc
+    tmp = Cons(lst[0],acc)
+    return list2List1(lst[1:],tmp)
+tmp = list(range(100000))
 t = list2List(tmp)
-import sys
-#sys.setrecursionlimit(2 ** 30)
+#empty = Empty()
+#t1 = list2List1(list(reversed(tmp)),empty)
 #print( t )
-#print( sum(t) )
-#print( length(t) )
+print( force( sum(t,0) ) )
+print( force( length(t,0) ) )
+#import sys
+#sys.setrecursionlimit(2 ** 30)
+
 @Tail
 def Len(lst,acc):
     #print (lst)
@@ -103,6 +112,5 @@ def Len(lst,acc):
         return acc
     else:
         return Len(lst[1:],acc+1)
-
 #print( force(Len(list(range(10000)),0) ) )
 
