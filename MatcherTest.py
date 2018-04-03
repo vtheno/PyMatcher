@@ -89,19 +89,20 @@ def list2List1(lst,acc):
     tmp = Cons(lst[0],acc)
     return list2List1(lst[1:],tmp)
 
-tmp = list(range(50000))
-t = list2List(tmp)
-t1 = force(list2List1(list(reversed(tmp)),Empty()))
-print( force(length(t1,0) ) )
+#tmp = list(range(50000))
+#t = list2List(tmp)
+#t1 = force(list2List1(list(reversed(tmp)),Empty()))
+#print( force(length(t1,0) ) )
 #print( force( sum(t,0) ) )
 #print( force( length(t,0) ) )
 #print( force( elem(t,2333) ) )
 #print( force( foldl(t,lambda a,b:a+b,0)) )
 @Tail
 def Len(lst,acc):
-    #print (lst)
     if lst == []:
         return acc
-    else:
-        return Len(lst[1:],acc+1)
-#print( force(Len(list(range(10000)),0) ) )
+    return Len(lst[1:],acc+1)
+def len(lst):
+    return force(Len(lst,0))
+test = list(range(40000))
+print ( len(test))
