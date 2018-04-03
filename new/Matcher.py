@@ -1,4 +1,24 @@
 #coding=utf-8
+def Tail(func):
+    def init(self,v):
+        self.v = v
+    def toString(self):
+        return "(Ref {})".format(self.v)
+    Ref = type("Ref",(),{"__init__":init,"__repr__":toString})
+    info = Ref( (None,None) )
+    def call(*args,**kw): # 此处应该交叉引用
+        info.v = (args,kw)
+        argv,kwd = info.v
+        yield func (*argv,**kwd)
+    return call
+def force(g):
+    while 1:
+        try:
+            g = next(g)
+            #print (g)
+        except Exception as e:
+            #print (g,e)
+            return g
 List = type("List",(),{})
 ListValue = type("ListValue",(List,),{})
 def init(self,hd,tl): 
@@ -30,7 +50,7 @@ def Match(Env={}):
     def matcher(typ):
         def helper(func): 
             setEnv(func,typ,Env)
-            setattr(typ,func.__name__,func)
+            setattr(typ,func.__name__,Tail(func))
             def warp(v,*args):
                 return getattr(v,func.__name__)(*args)
             return warp
@@ -39,21 +59,21 @@ def Match(Env={}):
 env = {}
 matcher = Match(env)
 @matcher(Cons)
-def length(self):
-    return 1 + self.tl.length()
+def length(self,acc):
+    return self.tl.length(acc+1)
 print( env )
 @matcher(Empty)
-def length(self):
-    return 0
+def length(self,acc):
+    return acc
 print( env )
-print( length(tempList) )
+print( force(length(tempList,0) ) )
 @matcher(Cons)
-def sum(self):
-    return self.hd + self.tl.sum()
+def sum(self,acc):
+    return self.tl.sum(self.hd + acc)
 @matcher(Empty)
-def sum(self):
-    return 0
-print( sum(tempList) )
+def sum(self,acc):
+    return acc
+print( force( sum(tempList,0) ) )
 
 def list2List(lst):
     def init(self,v):
@@ -69,26 +89,20 @@ def list2List(lst):
         tmp = tmp.tl
     return temp.v
 
-#tmp = list(range(1800))
-#t = list2List(tmp)
+tmp = list(range(1000))
+t = list2List(tmp)
 import sys
 #sys.setrecursionlimit(2 ** 30)
 #print( t )
 #print( sum(t) )
 #print( length(t) )
-
-def Len(lst):
+@Tail
+def Len(lst,acc):
+    #print (lst)
     if lst == []:
-        return 0
+        return acc
     else:
-        return 1 + Len(lst[1:])
-#print( Len(range(10000) ) )
-print( Len(list(range(10)) ) )
-def test():
-    frame = sys._getframe()
-    print( dir(frame ) )
-    frame.f_locals['a'] = 233
-    print( frame.f_locals )
-    while frame and frame.f_code.co_filename == Len:
-        frame = frame.f_back
-test()
+        return Len(lst[1:],acc+1)
+
+#print( force(Len(list(range(10000)),0) ) )
+
