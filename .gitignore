@@ -1,4 +1,8 @@
+*.c
 *.pyc
+*.pyd
 *~
 __pycache__
 __pycache__\*
+build
+build\*
