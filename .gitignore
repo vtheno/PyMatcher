@@ -6,3 +6,6 @@ __pycache__
 __pycache__\*
 build
 build\*
+test\Match\*.pyd
+test\Match\*.pyc
+test\Match\*.c
