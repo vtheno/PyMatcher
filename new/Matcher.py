@@ -3,13 +3,11 @@ def Tail(func):
     def call(*args,**kw): # x
         yield func (*args,**kw)
     return call
-
 def force(g):
     while 1:
         try:
             g = next(g)
-        except Exception as e:
-            print (e,g)
+        except StopIteration as e:
             return g
 
 List = type("List",(),{})
@@ -104,7 +102,6 @@ print( force( sum(t,0) ) )
 print( force( length(t,0) ) )
 #import sys
 #sys.setrecursionlimit(2 ** 30)
-
 @Tail
 def Len(lst,acc):
     #print (lst)
